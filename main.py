@@ -49,7 +49,7 @@ def execute_command_callback(command, car_controller):
         while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
             car_controller.brake()
 
-        if car_controller.get_engine_status() != True: 
+        if car_controller.get_engine_status() == True: 
             car_controller.toggle_engine() # 엔진 정지
 
         car_controller.unlock_left_door() # 왼쪽문 열기
