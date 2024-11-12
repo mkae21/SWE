@@ -8,8 +8,14 @@ from gui import CarSimulatorGUI
 # -> 이 함수에서 시그널을 입력받고 처리하는 로직을 구성하면, 알아서 GUI에 연동이 됩니다.
 
 def execute_command_callback(command, car_controller):
-    if command == "ENGINE_BTN":
-        car_controller.toggle_engine() # 시동 ON / OFF
+    if command == "BRAKE_ON":
+        car_controller.brake()  # 브레이크 누르기
+    elif command == "BRAKE_OFF":
+        car_controller.OFF_brake()  # 브레이크 떼기
+    elif command == "ENGINE_BTN":
+        # 엔진 시동을 켜기 전에 브레이크가 ON 상태여야 함
+        if car_controller.car.brake_status == "ON":
+            car_controller.toggle_engine()  # 엔진 시동
     elif command == "ACCELERATE":
         if car.engine_on: # 엔진이 켜져있을때만 엑셀 작동
             # car_controller.accelerate() # 속도 +10 ######## 은수님 코드와 현호님 코드 충돌 임시 해결
