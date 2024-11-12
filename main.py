@@ -43,9 +43,20 @@ def execute_command_callback(command, car_controller):
     elif command == "RIGHT_DOOR_CLOSE":
         car_controller.close_right_door() # 오른쪽문 닫기
     elif command == "TRUNK_OPEN":
-        car_controller.open_trunk() # 트렁크 열기
-    elif command =="TRUNK_CLOSED":
-        car_controller.close_trunk() # 트렁크 닫기
+        if car_controller.get_lock_status()=="False":
+            print("트렁크를 열 수 없습니다.")
+        else:
+            if car_controller.get_trunk_status()=="False":
+                print("이미 트렁크가 열려 있습니다.")
+            else:
+                car_controller.open_trunk() # 트렁크 열기
+                print("트렁크가 열렸습니다.")
+    elif command == "TRUNK_CLOSE":
+        if car_controller.get_trunk_status()=="True":
+            print("이미 트렁크가 닫혀 있습니다.")
+        else:
+            car_controller.close_trunk() # 트렁크 닫기
+            print("트렁크가 닫혔습니다.")
     elif command == "SOS": 
         while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
             car_controller.brake()
