@@ -11,6 +11,12 @@ class CarController:
     def brake(self):
         self.car.brake()
 
+    def OFF_brake(self):
+        # 브레이크가 떼어졌을 때 상태를 변경
+        self.car.OFF_brake()
+
+    # 나머지 메서드들 (문 잠금, 트렁크 등)은 변경하지 않음 
+
     # 차량 전체 잠금 상태
     def lock_vehicle(self):
         self.car.lock_vehicle()
