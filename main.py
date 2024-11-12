@@ -15,18 +15,45 @@ def execute_command_callback(command, car_controller):
     elif command == "BRAKE":
         car_controller.brake() # 속도 -10
     elif command == "LOCK":
-        car_controller.lock_vehicle() # 차량잠금
+        if car_controller.get_lock_status == False: # 차량 전체 잠금이 False일 때
+            car_controller.lock_vehicle() # 차량잠금
+            car_controller.lock_left_door() # 왼쪽문 잠금
+            car_controller.lock_right_door() # 오른쪽문 잠금
     elif command == "UNLOCK":
         car_controller.unlock_vehicle() # 차량잠금해제
+        if car_controller.get_lock_status == True: # 차량 전체 잠금이 False일 때
+            car_controller.unlock_vehicle() # 차량잠금
+            car_controller.unlock_left_door() # 왼쪽문 잠금해제
+            car_controller.unlock_right_door() # 오른쪽문 잠금해제
     elif command == "LEFT_DOOR_LOCK":
         car_controller.lock_left_door() # 왼쪽문 잠금
     elif command == "LEFT_DOOR_UNLOCK":
         car_controller.unlock_left_door() # 왼쪽문 잠금해제
+    elif command == "RIGHT_DOOR_LOCK":
+        car_controller.lock_right_door() # 오른쪽문 잠금
+    elif command == "RIGHT_DOOR_UNLOCK":
+        car_controller.unlock_right_door() # 오른쪽문 잠금해제
     elif command == "LEFT_DOOR_OPEN":
         car_controller.open_left_door() # 왼쪽문 열기
     elif command == "LEFT_DOOR_CLOSE":
         car_controller.close_left_door() # 왼쪽문 닫기
+    elif command == "RIGHT_DOOR_OPEN":
+        car_controller.open_right_door() # 오른쪽문 열기
+    elif command == "RIGHT_DOOR_CLOSE":
+        car_controller.close_right_door() # 오른쪽문 닫기
     elif command == "TRUNK_OPEN":
+        car_controller.open_trunk() # 트렁크 열기
+    elif command =="TRUNK_CLOSED":
+        car_controller.close_trunk() # 트렁크 닫기
+    elif command == "SOS": 
+        while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
+            car_controller.brake()
+
+        if car_controller.get_engine_status() == True: 
+            car_controller.toggle_engine() # 엔진 정지
+
+        car_controller.unlock_left_door() # 왼쪽문 열기
+        car_controller.unlock_right_door() #오른쪽문 열기
         car_controller.open_trunk() # 트렁크 열기
 
 
