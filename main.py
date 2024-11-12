@@ -11,7 +11,8 @@ def execute_command_callback(command, car_controller):
     if command == "ENGINE_BTN":
         car_controller.toggle_engine() # 시동 ON / OFF
     elif command == "ACCELERATE":
-        car_controller.accelerate() # 속도 +10
+        if car.engine_on: # 엔진이 켜져있을때만 엑셀 작동
+            car_controller.accelerate() # 속도 +10
     elif command == "BRAKE":
         car_controller.brake() # 속도 -10
     elif command == "LOCK":
