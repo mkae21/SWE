@@ -11,9 +11,25 @@ def execute_command_callback(command, car_controller):
     if command == "ENGINE_BTN":
         car_controller.toggle_engine() # 시동 ON / OFF
     elif command == "ACCELERATE":
-        car_controller.accelerate() # 속도 +10
+        # 가속 페달을 밟았을 때의 동작
+        if car_controller.speed < 130:  # 시속 130km 이상으로 증가하지 않도록 제한
+            car_controller.accelerate()  # 속도 +10
+            print(f"가속 페달 상태: ON, 현재 속도: {car_controller.speed} km/h")
+            
+            # 속도가 30km/h에 도달하면 모든 문을 잠금
+            if car_controller.speed >= 30 and not car_controller.locked:
+                car_controller.lock_vehicle()
+                print("모든 문이 잠겼습니다.")
+        else:
+            print("최대 속도에 도달하여 더 이상 가속할 수 없습니다.")
+
     elif command == "BRAKE":
-        car_controller.brake() # 속도 -10
+        # 브레이크 페달을 밟았을 때의 동작
+        if car_controller.speed > 0:  # 시속 0km 이하로 감소하지 않도록 제한
+            car_controller.brake()  # 속도 -20
+            print(f"브레이크 페달 상태: ON, 현재 속도: {car_controller.speed} km/h")
+        else:
+            print("속도가 0km/h이므로 더 이상 감속할 수 없습니다.")
     elif command == "LOCK":
         car_controller.lock_vehicle() # 차량잠금
     elif command == "UNLOCK":
