@@ -8,14 +8,8 @@ from gui import CarSimulatorGUI
 # -> 이 함수에서 시그널을 입력받고 처리하는 로직을 구성하면, 알아서 GUI에 연동이 됩니다.
 
 def execute_command_callback(command, car_controller):
-    if command == "BRAKE_ON":
-        car_controller.brake()  # 브레이크 누르기
-    elif command == "BRAKE_OFF":
-        car_controller.OFF_brake()  # 브레이크 떼기
-    elif command == "ENGINE_BTN":
-        # 엔진 시동을 켜기 전에 브레이크가 ON 상태여야 함
-        if car_controller.car.brake_status == "ON":
-            car_controller.toggle_engine()  # 엔진 시동
+    if command == "ENGINE_BTN": # 엔진 시동을 켜기 전에 브레이크가 ON 상태여야 함
+        car_controller.toggle_engine() # 시동 ON / OFF
     elif command == "ACCELERATE":
         if car.engine_on: # 엔진이 켜져있을때만 엑셀 작동
             # car_controller.accelerate() # 속도 +10 ######## 은수님 코드와 현호님 코드 충돌 임시 해결
@@ -33,7 +27,7 @@ def execute_command_callback(command, car_controller):
 
     elif command == "BRAKE":
         # 브레이크 페달을 밟았을 때의 동작
-        if car_controller.speed > 0:  # 시속 0km 이하로 감소하지 않도록 제한
+        if car.speed > 0:  # 시속 0km 이하로 감소하지 않도록 제한
             car_controller.brake()  # 속도 -20
             print(f"브레이크 페달 상태: ON, 현재 속도: {car_controller.speed} km/h")
         else:
@@ -45,8 +39,8 @@ def execute_command_callback(command, car_controller):
             car_controller.lock_right_door() # 오른쪽문 잠금
     elif command == "UNLOCK":
         car_controller.unlock_vehicle() # 차량잠금해제
-        if car_controller.get_lock_status == True: # 차량 전체 잠금이 False일 때
-            car_controller.unlock_vehicle() # 차량잠금
+        if car_controller.get_lock_status == True: # 차량 전체 잠금이 True일 때
+            car_controller.unlock_vehicle() # 차량잠금해제
             car_controller.unlock_left_door() # 왼쪽문 잠금해제
             car_controller.unlock_right_door() # 오른쪽문 잠금해제
     elif command == "LEFT_DOOR_LOCK":
