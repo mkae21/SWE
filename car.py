@@ -79,6 +79,7 @@ class Car:
 
     def start_acceleration(self):
         #속도를 초당 3km씩 증가시키고, 최대 15km로 제한(엑셀 OFF)
+        #엑셀=OFF인 상태에서만 작동하는것 구현 필요
         if self.__brake_status == "OFF":  # 브레이크 상태가 OFF일 때만 가속
             while self.__speed <= 15:  # 시속 15km에 도달할 때까지
                 self.__speed += 3  # 초당 시속 3km씩 증가
