@@ -82,15 +82,19 @@ def execute_command_callback(command, car_controller):
             car_controller.close_trunk() # 트렁크 닫기
             print("트렁크가 닫혔습니다.")
     elif command == "SOS": 
-        while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
-            car_controller.brake()
+        if car_controller.get_engine_status() == True: # 엔진이 켜져있을 때
+            while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
+                car_controller.brake()
 
-        if car_controller.get_engine_status() == True: 
             car_controller.toggle_engine() # 엔진 정지
+
+        if car_controller.gear != "P":
+            car_controller.gear_p() # 기어 P로 변경
 
         car_controller.unlock_left_door() # 왼쪽문 열기
         car_controller.unlock_right_door() #오른쪽문 열기
         car_controller.open_trunk() # 트렁크 열기
+
     elif command =="TRUNK_CLOSED":
         car_controller.close_trunk() # 트렁크 닫기
 
