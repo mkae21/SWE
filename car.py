@@ -8,7 +8,7 @@ class Car:
         self.__right_door_status = "CLOSED"  # "OPEN" or "CLOSED"
         self.__left_door_lock = "LOCKED"  # "LOCKED" or "UNLOCKED"8
         self.__right_door_lock = "LOCKED"  # "LOCKED" or "UNLOCKED"
-        self.__brake_status = "ON"  # 브레이크 상태, 'ON' 또는 'OFF'
+        '''self.__brake_status = "ON"  # 브레이크 상태, 'ON' 또는 'OFF'''
 
     # 엔진 상태 읽기
     @property
@@ -66,8 +66,13 @@ class Car:
             self.__speed += 10
 
     # 브레이크
+    def brake(self):
+        if self.__engine_on:
+            self.__speed = max(0, self.__speed - 10)
+
+    # 브레이크
     @property
-    def brake_status(self):
+    '''def brake_status(self):
         return self.__brake_status
 
     def ON_brake(self):
@@ -79,12 +84,13 @@ class Car:
 
     def start_acceleration(self):
         #속도를 초당 3km씩 증가시키고, 최대 15km로 제한(엑셀 OFF)
+        #엑셀=OFF인 상태에서만 작동하는것 구현 필요
         if self.__brake_status == "OFF":  # 브레이크 상태가 OFF일 때만 가속
             while self.__speed <= 15:  # 시속 15km에 도달할 때까지
                 self.__speed += 3  # 초당 시속 3km씩 증가
             self.__speed = 15  # 속도는 15km로 유지
             return True
-        return False
+        return False'''
 
     # 트렁크 열기
     def open_trunk(self):
