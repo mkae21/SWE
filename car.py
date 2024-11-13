@@ -8,11 +8,18 @@ class Car:
         self.__right_door_status = "CLOSED"  # "OPEN" or "CLOSED"
         self.__left_door_lock = "LOCKED"  # "LOCKED" or "UNLOCKED"8
         self.__right_door_lock = "LOCKED"  # "LOCKED" or "UNLOCKED"
+        self._gear = "P"  # 기어 상태, 'P', 'R', 'N', 'D'
+        # self.__brake_status = "ON"  # 브레이크 상태, 'ON' 또는 'OFF
 
     # 엔진 상태 읽기
     @property
     def engine_on(self):
         return self.__engine_on
+    
+    #기어 상태 읽기
+    @property
+    def gear(self):
+        return self._gear
 
     # 속도 읽기
     @property
@@ -59,6 +66,22 @@ class Car:
     def toggle_engine(self):
         self.__engine_on = not self.__engine_on
 
+    # 기어 P 변경
+    def gear_p(self):
+        self._gear = "P"
+
+    # 기어 R 변경
+    def gear_r(self):
+        self._gear = "R"
+
+    # 기어 N 변경
+    def gear_n(self):
+        self._gear = "N"
+        
+    # 기어 D 변경
+    def gear_d(self):
+        self._gear = "D"
+    
     # 가속
     def accelerate(self):
         if self.__engine_on:
