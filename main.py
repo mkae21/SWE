@@ -70,7 +70,9 @@ def execute_command_callback(command, car_controller):
     elif command == "RIGHT_DOOR_CLOSE":
         car_controller.close_right_door() # 오른쪽문 닫기
     elif command == "TRUNK_OPEN":
-        if car_controller.get_lock_status() == False:
+        if car_controller.gear()!="P":
+            print("트렁크를 열려면 기어를'P'에 두십시오")
+        elif car_controller.get_lock_status() == False:
             print("트렁크를 열 수 없습니다.")
         else:
             if car_controller.get_trunk_status() == False:
