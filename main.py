@@ -88,9 +88,10 @@ def execute_command_callback(command, car_controller):
             print("트렁크가 닫혔습니다.")
     elif command == "SOS": 
         if car_controller.get_engine_status(): # 엔진이 켜져있을 때
-            while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
+            while car_controller.get_speed() != 0: # 차량 속력이 0이 될 때까지
                 car_controller.brake()
-
+                print(f"속도: {car_controller.get_speed()} km/h")
+        if car_controller.get_speed() == 0: # 차량 속력이 0이 되면
             car_controller.toggle_engine() # 엔진 정지
 
         if car_controller.gear != "P":
