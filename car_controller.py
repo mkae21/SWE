@@ -5,6 +5,18 @@ class CarController:
     def toggle_engine(self):
         self.car.toggle_engine()
 
+    def gear_p(self):
+        self.car.gear_p()
+
+    def gear_r(self):
+        self.car.gear_r()
+
+    def gear_d(self):
+        self.car.gear_d()
+
+    def gear_n(self):    
+        self.car.gear_n()
+
     def accelerate(self):
         self.car.accelerate()
 
