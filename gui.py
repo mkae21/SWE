@@ -35,6 +35,9 @@ class CarSimulatorGUI:
         self.speed_label = tk.Label(self.window, text="Speed: 0 km/h", font=("Helvetica", 24))
         self.speed_label.pack(padx=20, pady=10)
 
+        self.gear_label = tk.Label(self.window, text="Gear: P", font=("Helvetica", 24),fg="red")
+        self.gear_label.place(x=200, y=170)
+
     def load_image(self):
         """이미지를 로드하여 캔버스에 표시"""
         self.car_photo = tk.PhotoImage(file="car.png")  # 이미지 경로로 설정
@@ -90,6 +93,16 @@ class CarSimulatorGUI:
             self.engine_button.config(bg="blue", text="Engine ON")
         else:
             self.engine_button.config(bg="red", text="Engine OFF")
+
+        # 기어 상태 업데이트
+        if self.car_controller.gear() == "P":
+            self.gear_label.config(text="Gear: P", fg="red")
+        elif self.car_controller.gear() == "R":
+            self.gear_label.config(text="Gear: R", fg="blue")
+        elif self.car_controller.gear() == "N":
+            self.gear_label.config(text="Gear: N", fg="yellow")
+        elif self.car_controller.gear() == "D":
+            self.gear_label.config(text="Gear: D", fg="green")
 
         # 차량 잠금 상태 업데이트
         if self.car_controller.get_lock_status():

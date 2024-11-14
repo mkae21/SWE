@@ -46,7 +46,7 @@ def execute_command_callback(command, car_controller):
             car_controller.lock_right_door() # 오른쪽문 잠금
     elif command == "UNLOCK":
         car_controller.unlock_vehicle() # 차량잠금해제
-        if car_controller.get_lock_status == True: # 차량 전체 잠금이 False일 때
+        if car_controller.get_lock_status: # 차량 전체 잠금이 False일 때
             car_controller.unlock_vehicle() # 차량잠금
             car_controller.unlock_left_door() # 왼쪽문 잠금해제
             car_controller.unlock_right_door() # 오른쪽문 잠금해제
@@ -67,30 +67,34 @@ def execute_command_callback(command, car_controller):
     elif command == "RIGHT_DOOR_CLOSE":
         car_controller.close_right_door() # 오른쪽문 닫기
     elif command == "TRUNK_OPEN":
-        if car_controller.get_lock_status()=="False":
+        if car_controller.get_lock_status() == False:
             print("트렁크를 열 수 없습니다.")
         else:
-            if car_controller.get_trunk_status()=="False":
+            if car_controller.get_trunk_status() == False:
                 print("이미 트렁크가 열려 있습니다.")
             else:
                 car_controller.open_trunk() # 트렁크 열기
                 print("트렁크가 열렸습니다.")
     elif command == "TRUNK_CLOSE":
-        if car_controller.get_trunk_status()=="True":
+        if car_controller.get_trunk_status()== True:
             print("이미 트렁크가 닫혀 있습니다.")
         else:
             car_controller.close_trunk() # 트렁크 닫기
             print("트렁크가 닫혔습니다.")
     elif command == "SOS": 
-        while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
-            car_controller.brake()
+        if car_controller.get_engine_status(): # 엔진이 켜져있을 때
+            while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
+                car_controller.brake()
 
-        if car_controller.get_engine_status() == True: 
             car_controller.toggle_engine() # 엔진 정지
+
+        if car_controller.gear != "P":
+            car_controller.gear_p() # 기어 P로 변경
 
         car_controller.unlock_left_door() # 왼쪽문 열기
         car_controller.unlock_right_door() #오른쪽문 열기
         car_controller.open_trunk() # 트렁크 열기
+
     elif command =="TRUNK_CLOSED":
         car_controller.close_trunk() # 트렁크 닫기
 
