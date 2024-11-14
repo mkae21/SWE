@@ -4,7 +4,7 @@ class CarController:
 
     def toggle_engine(self):
         self.car.toggle_engine()
-
+    
     def gear_p(self):
         self.car.gear_p()
 
@@ -64,7 +64,11 @@ class CarController:
 
     def get_engine_status(self):
         return self.car.engine_on
-
+    
+    #기어 상태 읽기
+    def gear(self):
+        return self.car.gear
+    
     def get_lock_status(self):
         return self.car.lock
 
