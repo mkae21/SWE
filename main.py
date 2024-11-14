@@ -10,7 +10,7 @@ from gui import CarSimulatorGUI
 def execute_command_callback(command, car_controller):
     if command == "ENGINE_BTN":
         if car_controller.car.engine_on == False:  # 엔진이 꺼져 있는 경우에만 시동을 걸도록
-            if car_controller.get_speed() == 0:  # 속도가 0이면 브레이크가 눌린 상태로 간주
+            if car_controller.get_speed() == 0 and car_controller.gear_p(): # 속도가 0이면 브레이크가 눌린 상태로 간주, 기어는 p상태
                 car_controller.toggle_engine()  # 엔진 켜기
             else:
                 print("브레이크 페달을 밟아야합니다.")  # 속도가 0이 아니면 경고 메시지 출력
@@ -46,7 +46,7 @@ def execute_command_callback(command, car_controller):
             car_controller.lock_right_door() # 오른쪽문 잠금
     elif command == "UNLOCK":
         car_controller.unlock_vehicle() # 차량잠금해제
-        if car_controller.get_lock_status == True: # 차량 전체 잠금이 False일 때
+        if car_controller.get_lock_status: # 차량 전체 잠금이 False일 때
             car_controller.unlock_vehicle() # 차량잠금
             car_controller.unlock_left_door() # 왼쪽문 잠금해제
             car_controller.unlock_right_door() # 오른쪽문 잠금해제
@@ -67,32 +67,50 @@ def execute_command_callback(command, car_controller):
     elif command == "RIGHT_DOOR_CLOSE":
         car_controller.close_right_door() # 오른쪽문 닫기
     elif command == "TRUNK_OPEN":
-        if car_controller.get_lock_status()=="False":
+        if car_controller.get_lock_status() == False:
             print("트렁크를 열 수 없습니다.")
         else:
-            if car_controller.get_trunk_status()=="False":
+            if car_controller.get_trunk_status() == False:
                 print("이미 트렁크가 열려 있습니다.")
             else:
                 car_controller.open_trunk() # 트렁크 열기
                 print("트렁크가 열렸습니다.")
     elif command == "TRUNK_CLOSE":
-        if car_controller.get_trunk_status()=="True":
+        if car_controller.get_trunk_status()== True:
             print("이미 트렁크가 닫혀 있습니다.")
         else:
             car_controller.close_trunk() # 트렁크 닫기
             print("트렁크가 닫혔습니다.")
     elif command == "SOS": 
-        while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
-            car_controller.brake()
+        if car_controller.get_engine_status(): # 엔진이 켜져있을 때
+            while car_controller.get_speed() == 0: # 차량 속력이 0이 될 때까지
+                car_controller.brake()
 
-        if car_controller.get_engine_status() == True: 
             car_controller.toggle_engine() # 엔진 정지
+
+        if car_controller.gear != "P":
+            car_controller.gear_p() # 기어 P로 변경
 
         car_controller.unlock_left_door() # 왼쪽문 열기
         car_controller.unlock_right_door() #오른쪽문 열기
         car_controller.open_trunk() # 트렁크 열기
+
     elif command =="TRUNK_CLOSED":
         car_controller.close_trunk() # 트렁크 닫기
+        
+    # 기어 명령 추가
+    elif command == "GEAR_P":
+        car_controller.gear_p()  # 주차 기어로 전환
+        print("기어가 P(주차)로 변경되었습니다.")
+    elif command == "GEAR_R":
+        car_controller.gear_r()  # 후진 기어로 전환
+        print("기어가 R(후진)로 변경되었습니다.")
+    elif command == "GEAR_D":
+        car_controller.gear_d()  # 주행 기어로 전환
+        print("기어가 D(주행)로 변경되었습니다.")
+    elif command == "GEAR_N":
+        car_controller.gear_n()  # 중립 기어로 전환
+        print("기어가 N(중립)으로 변경되었습니다.")
 
 
 # 파일 경로를 입력받는 함수

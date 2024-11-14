@@ -4,7 +4,7 @@ class CarController:
 
     def toggle_engine(self):
         self.car.toggle_engine()
-
+    
     def gear_p(self):
         self.car.gear_p()
 
@@ -22,8 +22,6 @@ class CarController:
 
     def brake(self):
         self.car.brake()
-
-    # 나머지 메서드들 (문 잠금, 트렁크 등)은 변경하지 않음 
 
     # 차량 전체 잠금 상태
     def lock_vehicle(self):
@@ -66,7 +64,11 @@ class CarController:
 
     def get_engine_status(self):
         return self.car.engine_on
-
+    
+    #기어 상태 읽기
+    def gear(self):
+        return self.car.gear
+    
     def get_lock_status(self):
         return self.car.lock
 
