@@ -10,8 +10,9 @@ from gui import CarSimulatorGUI
 def execute_command_callback(command, car_controller):
     if command == "ENGINE_BTN":
         if car_controller.car.engine_on == False:  # 엔진이 꺼져 있는 경우에만 시동을 걸도록
-            if car_controller.get_speed() == 0 and car_controller.gear_p(): # 속도가 0이면 브레이크가 눌린 상태로 간주, 기어는 p상태
-                car_controller.toggle_engine()  # 엔진 켜기
+            if car_controller.get_speed() == 0:
+                if car_controller.gear() == "P": # 속도가 0이면 브레이크가 눌린 상태로 간주, 기어는 p상태
+                    car_controller.toggle_engine()  # 엔진 켜기
             else:
                 print("브레이크 페달을 밟아야합니다.")  # 속도가 0이 아니면 경고 메시지 출력
         else:
@@ -21,9 +22,9 @@ def execute_command_callback(command, car_controller):
         if car.engine_on: # 엔진이 켜져있을때만 엑셀 작동
             # car_controller.accelerate() # 속도 +10 ######## 은수님 코드와 현호님 코드 충돌 임시 해결
         # 가속 페달을 밟았을 때의 동작
-            if car_controller.speed < 130:  # 시속 130km 이상으로 증가하지 않도록 제한
+            if car_controller.get_speed() < 130:  # 시속 130km 이상으로 증가하지 않도록 제한
                 car_controller.accelerate()  # 속도 +10
-                print(f"가속 페달 상태: ON, 현재 속도: {car_controller.speed} km/h")
+                print(f"가속 페달 상태: ON, 현재 속도: {car_controller.get_speed()} km/h")
                 
                 # 속도가 30km/h에 도달하면 모든 문을 잠금
                 if car_controller.speed >= 30 and not car_controller.locked:
@@ -34,9 +35,9 @@ def execute_command_callback(command, car_controller):
 
     elif command == "BRAKE":
         # 브레이크 페달을 밟았을 때의 동작
-        if car_controller.speed > 0:  # 시속 0km 이하로 감소하지 않도록 제한
+        if car_controller.get_speed() > 0:  # 시속 0km 이하로 감소하지 않도록 제한
             car_controller.brake()  # 속도 -20
-            print(f"브레이크 페달 상태: ON, 현재 속도: {car_controller.speed} km/h")
+            print(f"브레이크 페달 상태: ON, 현재 속도: {car_controller.get_speed()} km/h")
         else:
             print("속도가 0km/h이므로 더 이상 감속할 수 없습니다.")
     elif command == "LOCK":
