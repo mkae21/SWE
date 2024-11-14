@@ -10,7 +10,7 @@ from gui import CarSimulatorGUI
 def execute_command_callback(command, car_controller):
     if command == "ENGINE_BTN":
         if car_controller.car.engine_on == False:  # 엔진이 꺼져 있는 경우에만 시동을 걸도록
-            if car_controller.get_speed() == 0:  # 속도가 0이면 브레이크가 눌린 상태로 간주
+            if car_controller.get_speed() == 0 & car_controller.gear_p(): # 속도가 0이면 브레이크가 눌린 상태로 간주, 기어는 p상태
                 car_controller.toggle_engine()  # 엔진 켜기
             else:
                 print("브레이크 페달을 밟아야합니다.")  # 속도가 0이 아니면 경고 메시지 출력
