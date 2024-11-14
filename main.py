@@ -86,6 +86,19 @@ def execute_command_callback(command, car_controller):
         car_controller.open_trunk() # 트렁크 열기
     elif command =="TRUNK_CLOSED":
         car_controller.close_trunk() # 트렁크 닫기
+    # 기어 명령 추가
+    elif command == "GEAR_P":
+        car_controller.gear_p()  # 주차 기어로 전환
+        print("기어가 P(주차)로 변경되었습니다.")
+    elif command == "GEAR_R":
+        car_controller.gear_r()  # 후진 기어로 전환
+        print("기어가 R(후진)로 변경되었습니다.")
+    elif command == "GEAR_D":
+        car_controller.gear_d()  # 주행 기어로 전환
+        print("기어가 D(주행)로 변경되었습니다.")
+    elif command == "GEAR_N":
+        car_controller.gear_n()  # 중립 기어로 전환
+        print("기어가 N(중립)으로 변경되었습니다.")
 
 
 # 파일 경로를 입력받는 함수
