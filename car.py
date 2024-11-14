@@ -9,7 +9,6 @@ class Car:
         self.__left_door_lock = "LOCKED"  # "LOCKED" or "UNLOCKED"8
         self.__right_door_lock = "LOCKED"  # "LOCKED" or "UNLOCKED"
         self._gear = "P"  # 기어 상태, 'P', 'R', 'N', 'D'
-        # self.__brake_status = "ON"  # 브레이크 상태, 'ON' 또는 'OFF
 
     # 엔진 상태 읽기
     @property
