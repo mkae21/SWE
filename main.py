@@ -15,8 +15,11 @@ def execute_command_callback(command, car_controller):
                     car_controller.toggle_engine()  # 엔진 켜기
             else:
                 print("브레이크 페달을 밟아야합니다.")  # 속도가 0이 아니면 경고 메시지 출력
+        elif car_controller.car.engine_on == True and car_controller.get_speed() == 0:  # 엔진이 켜져 있고 속도가 0일 때만 시동을 끌 수 있도록
+            car_controller.toggle_engine()  # 엔진 끄기
+            print("엔진이 꺼졌습니다.")
         else:
-            print("엔진이 이미 켜져 있습니다.")  # 엔진이 이미 켜져 있으면 상태 유지
+            print("엔진이 이미 켜져 있습니다.")
 
     elif command == "ACCELERATE":
         if car.engine_on: # 엔진이 켜져있을때만 엑셀 작동
@@ -27,8 +30,10 @@ def execute_command_callback(command, car_controller):
                 print(f"가속 페달 상태: ON, 현재 속도: {car_controller.get_speed()} km/h")
                 
                 # 속도가 30km/h에 도달하면 모든 문을 잠금
-                if car_controller.speed >= 30 and not car_controller.locked:
+                if car_controller.get_speed() >= 30 and not car_controller.get_lock_status():
                     car_controller.lock_vehicle()
+                    car_controller.lock_left_door() # 왼쪽문 잠금
+                    car_controller.lock_right_door() # 오른쪽문 잠금
                     print("모든 문이 잠겼습니다.")
         else:
             print("최대 속도에 도달하여 더 이상 가속할 수 없습니다.")
