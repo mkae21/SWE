@@ -97,6 +97,7 @@ def execute_command_callback(command, car_controller):
 
     elif command =="TRUNK_CLOSED":
         car_controller.close_trunk() # 트렁크 닫기
+        
     # 기어 명령 추가
     elif command == "GEAR_P":
         car_controller.gear_p()  # 주차 기어로 전환
