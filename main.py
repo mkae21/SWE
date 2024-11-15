@@ -1,3 +1,4 @@
+import unittest
 import threading
 from car import Car
 from car_controller import CarController
@@ -91,7 +92,8 @@ def execute_command_callback(command, car_controller):
             while car_controller.get_speed() != 0: # 차량 속력이 0이 될 때까지
                 car_controller.brake()
                 print(f"속도: {car_controller.get_speed()} km/h")
-        if car_controller.get_speed() == 0: # 차량 속력이 0이 되면
+
+        if car_controller.get_speed() == 0 and car_controller.get_engine_status(): # 차량 속력이 0이 되면
             car_controller.toggle_engine() # 엔진 정지
 
         if car_controller.gear != "P":
@@ -142,19 +144,84 @@ def file_input_thread(gui):
         # 파일 경로를 받은 후 GUI의 mainloop에서 실행할 수 있도록 큐에 넣음
         gui.window.after(0, lambda: gui.process_commands(file_path))
 
+
+class TestSOS(unittest.TestCase):
+    # SOS 버튼을 눌렀을 때, 차량이 정지하고 모든 문이 열리는지 확인
+    def test_sos_default(self):
+        car = Car()
+        car_controller = CarController(car)
+
+        execute_command_callback("SOS", car_controller)
+        
+        self.assertEqual(car_controller.get_speed(), 0)
+        self.assertEqual(car_controller.get_engine_status(), False)
+        self.assertEqual(car_controller.get_left_door_lock(), "UNLOCKED")
+        self.assertEqual(car_controller.get_right_door_lock(), "UNLOCKED")
+        self.assertEqual(car_controller.get_trunk_status(), False)
+        self.assertEqual(car_controller.gear(), "P")
+    
+    def test_sos_Engine_btn(self):
+        car = Car()
+        car_controller = CarController(car)
+
+        execute_command_callback("ENGINE_BTN", car_controller)
+
+        execute_command_callback("SOS", car_controller)
+
+        self.assertEqual(car_controller.get_speed(), 0)
+        self.assertEqual(car_controller.get_engine_status(), False)
+        self.assertEqual(car_controller.get_left_door_lock(), "UNLOCKED")
+        self.assertEqual(car_controller.get_right_door_lock(), "UNLOCKED")
+        self.assertEqual(car_controller.get_trunk_status(), False)
+        self.assertEqual(car_controller.gear(), "P")
+    
+    def test_sos_Driving(self):
+        car = Car()
+        car_controller = CarController(car)
+
+        execute_command_callback("ENGINE_BTN", car_controller)
+
+        while car_controller.get_speed() < 130:
+            execute_command_callback("ACCELERATE", car_controller)
+
+        execute_command_callback("SOS", car_controller)
+
+        self.assertEqual(car_controller.get_speed(), 0)
+        self.assertEqual(car_controller.get_engine_status(), False)
+        self.assertEqual(car_controller.get_left_door_lock(), "UNLOCKED")
+        self.assertEqual(car_controller.get_right_door_lock(), "UNLOCKED")
+        self.assertEqual(car_controller.get_trunk_status(), False)
+        self.assertEqual(car_controller.gear(), "P")
+
+
+    def test_gear(self):
+        car = Car()
+        car_controller = CarController(car)
+        execute_command_callback("GEAR_P", car_controller)
+        self.assertEqual(car_controller.gear(), "P")
+        execute_command_callback("GEAR_R", car_controller)
+        self.assertEqual(car_controller.gear(), "R")
+        execute_command_callback("GEAR_D", car_controller)
+        self.assertEqual(car_controller.gear(), "D")
+        execute_command_callback("GEAR_N", car_controller)
+        self.assertEqual(car_controller.gear(), "N")
+
+
 # 메인 실행
 # -> 가급적 main login은 수정하지 마세요.
 if __name__ == "__main__":
-    car = Car()
-    car_controller = CarController(car)
+    # car = Car()
+    # car_controller = CarController(car)
 
-    # GUI는 메인 스레드에서 실행
-    gui = CarSimulatorGUI(car_controller, lambda command: execute_command_callback(command, car_controller))
+    # # GUI는 메인 스레드에서 실행
+    # gui = CarSimulatorGUI(car_controller, lambda command: execute_command_callback(command, car_controller))
 
-    # 파일 입력 스레드는 별도로 실행하여, GUI와 병행 처리
-    input_thread = threading.Thread(target=file_input_thread, args=(gui,))
-    input_thread.daemon = True  # 메인 스레드가 종료되면 서브 스레드도 종료되도록 설정
-    input_thread.start()
+    # # 파일 입력 스레드는 별도로 실행하여, GUI와 병행 처리
+    # input_thread = threading.Thread(target=file_input_thread, args=(gui,))
+    # input_thread.daemon = True  # 메인 스레드가 종료되면 서브 스레드도 종료되도록 설정
+    # input_thread.start()
 
-    # GUI 시작 (메인 스레드에서 실행)
-    gui.start()
+    # # GUI 시작 (메인 스레드에서 실행)
+    # gui.start()
+    
+    unittest.main()
