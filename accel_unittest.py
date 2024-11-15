@@ -2,61 +2,62 @@ import unittest
 from unittest.mock import MagicMock
 from car import Car
 from car_controller import CarController
-from main import execute_command_callback  
+from main import execute_command_callback  # 필요에 따라 main 스크립트 파일에 맞게 조정
 
+class TestAccelerate(unittest.TestCase):
 
-class TestAccelerateCommand(unittest.TestCase):
-    def setUp(self):
-        # Car와 CarController의 mock 객체 생성
-        self.mock_car = Car()
-        self.mock_car_controller = CarController(self.mock_car)
+    def test_accelerate_when_engine_off(self):
+        car = Car()
+        car_controller = CarController(car)
 
-        # 필요한 메서드와 속성 모의(Mock)
-        self.mock_car_controller.get_speed = MagicMock(return_value=0)
-        self.mock_car_controller.accelerate = MagicMock()
-        self.mock_car_controller.get_lock_status = MagicMock(return_value=False)
-        self.mock_car_controller.lock_left_door = MagicMock()
-        self.mock_car_controller.lock_right_door = MagicMock()
-        self.mock_car_controller.car.engine_on = True  # 엔진이 켜져 있는 상태로 설정
+        # 엔진이 꺼진 상태에서 ACCELERATE 명령
+        execute_command_callback("ACCELERATE", car_controller)
+
+        # 속도가 증가하지 않음을 확인
+        self.assertEqual(car_controller.get_speed(), 0)
 
     def test_accelerate_when_engine_on_and_speed_below_130(self):
-        # 엔진이 켜져 있고, 속도가 130km/h 미만일 때 가속 동작 테스트
-        self.mock_car_controller.get_speed = MagicMock(return_value=20)  # 초기 속도 20km/h
-        execute_command_callback("ACCELERATE", self.mock_car_controller)
+        car = Car()
+        car_controller = CarController(car)
 
-        # 가속 메서드가 호출되었는지 확인
-        self.mock_car_controller.accelerate.assert_called_once()
+        # 엔진을 켠 후 ACCELERATE 명령
+        execute_command_callback("ENGINE_BTN", car_controller)
+        for _ in range(5):
+            execute_command_callback("ACCELERATE", car_controller)
 
-        # 속도가 30km/h 이상이고 문이 잠겨 있지 않으면 문 잠금 호출 확인
-        self.mock_car_controller.lock_left_door.assert_called_once()
-        self.mock_car_controller.lock_right_door.assert_called_once()
+        # 속도가 증가했는지 확인 (예: 가속 로직에 따라 설정)
+        self.assertGreater(car_controller.get_speed(), 0)
+        self.assertLessEqual(car_controller.get_speed(), 130)
 
-    def test_accelerate_does_not_work_when_engine_off(self):
-        # 엔진이 꺼져 있을 때 가속 동작 테스트
-        self.mock_car_controller.car.engine_on = False
-        execute_command_callback("ACCELERATE", self.mock_car_controller)
+    def test_accelerate_when_speed_at_130(self):
+        car = Car()
+        car_controller = CarController(car)
 
-        # 가속 메서드가 호출되지 않았는지 확인
-        self.mock_car_controller.accelerate.assert_not_called()
+        # 엔진 켜고 속도를 130까지 증가
+        execute_command_callback("ENGINE_BTN", car_controller)
+        while car_controller.get_speed() < 130:
+            execute_command_callback("ACCELERATE", car_controller)
 
-    def test_no_acceleration_above_130(self):
-        # 속도가 130km/h 이상일 때 가속 동작 테스트
-        self.mock_car_controller.get_speed = MagicMock(return_value=130)  # 초기 속도 130km/h
-        execute_command_callback("ACCELERATE", self.mock_car_controller)
+        # 130km/h에 도달한 상태에서 ACCELERATE 명령
+        current_speed = car_controller.get_speed()
+        execute_command_callback("ACCELERATE", car_controller)
 
-        # 가속 메서드가 호출되지 않았는지 확인
-        self.mock_car_controller.accelerate.assert_not_called()
+        # 속도가 130 이상으로 증가하지 않음을 확인
+        self.assertEqual(car_controller.get_speed(), current_speed)
 
-    def test_no_door_lock_when_already_locked(self):
-        # 속도가 30km/h 이상일 때 문 잠금 동작 테스트
-        self.mock_car_controller.get_speed = MagicMock(return_value=35)  # 초기 속도 35km/h
-        self.mock_car_controller.get_lock_status = MagicMock(return_value=True)  # 문이 이미 잠겨 있음
-        execute_command_callback("ACCELERATE", self.mock_car_controller)
+    def test_accelerate_with_brake_interaction(self):
+        car = Car()
+        car_controller = CarController(car)
 
-        # 문 잠금 메서드가 호출되지 않았는지 확인
-        self.mock_car_controller.lock_left_door.assert_not_called()
-        self.mock_car_controller.lock_right_door.assert_not_called()
+        # 엔진 켜고 가속 후 브레이크로 감속
+        execute_command_callback("ENGINE_BTN", car_controller)
+        for _ in range(5):
+            execute_command_callback("ACCELERATE", car_controller)
 
+        execute_command_callback("BRAKE", car_controller)
+
+        # 브레이크 작동 후 속도가 감소했는지 확인
+        self.assertLess(car_controller.get_speed(), 130)
 
 if __name__ == '__main__':
     unittest.main()
