@@ -62,11 +62,18 @@ def execute_command_callback(command, car_controller):
     elif command == "RIGHT_DOOR_UNLOCK":
         car_controller.unlock_right_door() # 오른쪽문 잠금해제
     elif command == "LEFT_DOOR_OPEN":
-        car_controller.open_left_door() # 왼쪽문 열기
+        if car_controller.get_left_door_lock() == "UNLOCKED":
+            car_controller.open_left_door() # 왼쪽문 열기
+        else:
+            print("왼쪽 문 잠금장치가 잠금상태입니다")
     elif command == "LEFT_DOOR_CLOSE":
         car_controller.close_left_door() # 왼쪽문 닫기
     elif command == "RIGHT_DOOR_OPEN":
-        car_controller.open_right_door() # 오른쪽문 열기
+        if car_controller.get_right_door_lock() == "UNLOCKED":
+            car_controller.open_right_door()  # 오른쪽문 열기
+        else:
+            print("오른쪽 문 잠금장치가 잠금상태입니다")
+
     elif command == "RIGHT_DOOR_CLOSE":
         car_controller.close_right_door() # 오른쪽문 닫기
     elif command == "TRUNK_OPEN":
