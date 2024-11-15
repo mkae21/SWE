@@ -1,4 +1,3 @@
-import unittest
 import threading
 from car import Car
 from car_controller import CarController
