@@ -79,7 +79,7 @@ def execute_command_callback(command, car_controller):
     elif command == "TRUNK_OPEN":
         if car_controller.gear()!="P":
             print("트렁크를 열려면 기어를'P'에 두십시오")
-        elif car_controller.get_lock_status() == False:
+        elif car_controller.get_lock_status() == True: #false가 unlocked이다.
             print("트렁크를 열 수 없습니다.")
         else:
             if car_controller.get_trunk_status() == False:
