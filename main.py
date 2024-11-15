@@ -312,18 +312,16 @@ class TestSOS(unittest.TestCase):
 # 메인 실행
 # -> 가급적 main login은 수정하지 마세요.
 if __name__ == "__main__":
-    # car = Car()
-    # car_controller = CarController(car)
+    car = Car()
+    car_controller = CarController(car)
 
-    # # GUI는 메인 스레드에서 실행
-    # gui = CarSimulatorGUI(car_controller, lambda command: execute_command_callback(command, car_controller))
+    # GUI는 메인 스레드에서 실행
+    gui = CarSimulatorGUI(car_controller, lambda command: execute_command_callback(command, car_controller))
 
-    # # 파일 입력 스레드는 별도로 실행하여, GUI와 병행 처리
-    # input_thread = threading.Thread(target=file_input_thread, args=(gui,))
-    # input_thread.daemon = True  # 메인 스레드가 종료되면 서브 스레드도 종료되도록 설정
-    # input_thread.start()
+    # 파일 입력 스레드는 별도로 실행하여, GUI와 병행 처리
+    input_thread = threading.Thread(target=file_input_thread, args=(gui,))
+    input_thread.daemon = True  # 메인 스레드가 종료되면 서브 스레드도 종료되도록 설정
+    input_thread.start()
 
-    # # GUI 시작 (메인 스레드에서 실행)
-    # gui.start()
-    
-    unittest.main()
+    # GUI 시작 (메인 스레드에서 실행)
+    gui.start()
