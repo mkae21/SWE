@@ -58,6 +58,21 @@ class TestAccelerate(unittest.TestCase):
 
         # 브레이크 작동 후 속도가 감소했는지 확인
         self.assertLess(car_controller.get_speed(), 130)
+    def test_lock_doors_when_speed_reaches_30(self):
+        car = Car()
+        car_controller = CarController(car)
+
+        # 엔진 켜고 가속 후 속도를 30 이상으로 증가
+        execute_command_callback("ENGINE_BTN", car_controller)
+        for _ in range(3):
+            execute_command_callback("ACCELERATE", car_controller)
+
+        # 속도가 30km/h 이상일 때 문이 잠겼는지 확인
+        execute_command_callback("ACCELERATE", car_controller)
+
+        # 문 잠금 상태 확인
+        self.assertEqual(car_controller.get_left_door_lock(), "LOCKED")
+        self.assertEqual(car_controller.get_right_door_lock(), "LOCKED")
 
 if __name__ == '__main__':
     unittest.main()
