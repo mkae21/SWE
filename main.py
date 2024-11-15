@@ -145,14 +145,45 @@ def file_input_thread(gui):
         gui.window.after(0, lambda: gui.process_commands(file_path))
 
 
+def testGear(command,car_controller):
+    if command == "GEAR_P":
+        if car_controller.get_speed() != 0:
+            return car_controller.gear()
+        
+        car_controller.gear_p()
+        return car_controller.gear()
+
+    elif command =="GEAR_N":
+        if car_controller.get_speed() != 0:
+            return car_controller.gear()
+        
+        car_controller.gear_n()
+        return car_controller.gear()
+    
+    elif command =="GEAR_R":
+        if car_controller.get_speed() != 0:
+            return car_controller.gear()
+        
+        car_controller.gear_r()
+        return car_controller.gear()
+
+    else:
+        if car_controller.get_speed() != 0:
+            return car_controller.gear()
+        
+        car_controller.gear_d()
+        return car_controller.gear()
+
+
+
 class TestSOS(unittest.TestCase):
-    # SOS 버튼을 눌렀을 때, 차량이 정지하고 모든 문이 열리는지 확인
+    
     def test_sos_default(self):
         car = Car()
         car_controller = CarController(car)
 
         execute_command_callback("SOS", car_controller)
-        
+
         self.assertEqual(car_controller.get_speed(), 0)
         self.assertEqual(car_controller.get_engine_status(), False)
         self.assertEqual(car_controller.get_left_door_lock(), "UNLOCKED")
@@ -180,6 +211,7 @@ class TestSOS(unittest.TestCase):
         car_controller = CarController(car)
 
         execute_command_callback("ENGINE_BTN", car_controller)
+        execute_command_callback("GEAR_D", car_controller)
 
         while car_controller.get_speed() < 130:
             execute_command_callback("ACCELERATE", car_controller)
@@ -194,17 +226,80 @@ class TestSOS(unittest.TestCase):
         self.assertEqual(car_controller.gear(), "P")
 
 
-    def test_gear(self):
+    def test_gear_default(self):
         car = Car()
         car_controller = CarController(car)
+
         execute_command_callback("GEAR_P", car_controller)
-        self.assertEqual(car_controller.gear(), "P")
+        self.assertEqual(testGear("GEAR_P",car_controller), "P")
+
         execute_command_callback("GEAR_R", car_controller)
-        self.assertEqual(car_controller.gear(), "R")
+        self.assertEqual(testGear("GEAR_R",car_controller), "R")
+
         execute_command_callback("GEAR_D", car_controller)
-        self.assertEqual(car_controller.gear(), "D")
+        self.assertEqual(testGear("GEAR_D",car_controller), "D")
+
         execute_command_callback("GEAR_N", car_controller)
-        self.assertEqual(car_controller.gear(), "N")
+        self.assertEqual(testGear("GEAR_N",car_controller), "N")
+
+
+    def test_gear_driving(self):
+        car = Car()
+        car_controller = CarController(car)
+
+        execute_command_callback("ENGINE_BTN", car_controller)
+        execute_command_callback("GEAR_D", car_controller)
+
+        if car_controller.get_speed() < 130:
+            execute_command_callback("ACCELERATE", car_controller)
+
+        execute_command_callback("GEAR_R", car_controller)
+        self.assertEqual(testGear("GEAR_R",car_controller), "D")
+
+        execute_command_callback("GEAR_N", car_controller)
+        self.assertEqual(testGear("GEAR_N",car_controller), "D")
+
+        execute_command_callback("GEAR_P", car_controller)
+        self.assertEqual(testGear("GEAR_P",car_controller), "D")
+
+    def test_gear_brake_after_accelerate(self):
+        car = Car()
+        car_controller = CarController(car)
+
+        execute_command_callback("ENGINE_BTN", car_controller)
+        execute_command_callback("GEAR_D", car_controller)
+
+        while car_controller.get_speed() < 130:
+            execute_command_callback("ACCELERATE", car_controller)
+
+        while car_controller.get_speed() != 0:
+            
+            execute_command_callback("BRAKE", car_controller)
+            # 속도가 0이 되는 순간은 실행 되지 않게 하기 위해
+            if car_controller.get_speed() != 0:
+                execute_command_callback("GEAR_P", car_controller)
+                self.assertEqual(testGear("GEAR_P",car_controller), "D")
+
+                execute_command_callback("GEAR_R", car_controller)
+                self.assertEqual(testGear("GEAR_R",car_controller), "D")
+
+                execute_command_callback("GEAR_N", car_controller)
+                self.assertEqual(testGear("GEAR_N",car_controller), "D")
+
+
+        
+        execute_command_callback("GEAR_P", car_controller)
+        self.assertEqual(testGear("GEAR_P",car_controller), "P")
+
+        execute_command_callback("GEAR_R", car_controller)
+        self.assertEqual(testGear("GEAR_R",car_controller), "R")
+
+        execute_command_callback("GEAR_D", car_controller)
+        self.assertEqual(testGear("GEAR_D",car_controller), "D")
+
+        execute_command_callback("GEAR_N", car_controller)
+        self.assertEqual(testGear("GEAR_N",car_controller), "N")
+
 
 
 # 메인 실행
