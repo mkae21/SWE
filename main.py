@@ -109,9 +109,11 @@ def execute_command_callback(command, car_controller):
             car_controller.toggle_engine() # 엔진 정지
             print("엔진이 꺼졌습니다.")
 
-        if car_controller.gear != "P":
-            car_controller.gear_p() # 기어 P로 변경
-            print("기어가 P(주차)로 변경되었습니다.")
+            if car_controller.gear != "P":
+                car_controller.gear_p() # 기어 P로 변경
+                print("기어가 P(주차)로 변경되었습니다.")
+        elif car_controller.get_speed() == 0 and car_controller.get_engine_status() == False:
+            car_controller.unlock_vehicle()# 차량 잠금 해제
 
         car_controller.unlock_left_door() # 왼쪽문 열기
         print("왼쪽문이 열렸습니다.")
