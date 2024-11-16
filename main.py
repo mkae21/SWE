@@ -94,6 +94,7 @@ def execute_command_callback(command, car_controller):
             car_controller.close_trunk() # 트렁크 닫기
             print("트렁크가 닫혔습니다.")
     elif command == "SOS": 
+        print("SOS 신호 수신.")
         if car_controller.get_engine_status(): # 엔진이 켜져있을 때
             while car_controller.get_speed() != 0: # 차량 속력이 0이 될 때까지
                 car_controller.brake()
@@ -101,13 +102,18 @@ def execute_command_callback(command, car_controller):
 
         if car_controller.get_speed() == 0 and car_controller.get_engine_status(): # 차량 속력이 0이 되면
             car_controller.toggle_engine() # 엔진 정지
+            print("엔진이 꺼졌습니다.")
 
         if car_controller.gear != "P":
             car_controller.gear_p() # 기어 P로 변경
+            print("기어가 P(주차)로 변경되었습니다.")
 
         car_controller.unlock_left_door() # 왼쪽문 열기
+        print("왼쪽문이 열렸습니다.")
         car_controller.unlock_right_door() #오른쪽문 열기
+        print("오른쪽문이 열렸습니다.")
         car_controller.open_trunk() # 트렁크 열기
+        print("트렁크가 열렸습니다.")
 
         # 기어 명령 추가
     elif command == "GEAR_P":
