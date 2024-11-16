@@ -9,31 +9,36 @@ from gui import CarSimulatorGUI
 
 def execute_command_callback(command, car_controller):
     if command == "ENGINE_BTN":
-        if car_controller.car.engine_on == False:  # 엔진이 꺼져 있는 경우에만 시동을 걸도록
+        if car_controller.car.engine_on == False:  # 엔진이 꺼져 있을때
             if car_controller.get_speed() == 0:
                 if car_controller.gear() == "P": # 속도가 0이면 브레이크가 눌린 상태로 간주, 기어는 p상태
                     car_controller.toggle_engine()  # 엔진 켜기
             else:
                 print("브레이크 페달을 밟아야합니다.")  # 속도가 0이 아니면 경고 메시지 출력
-        elif car_controller.car.engine_on == True and car_controller.get_speed() == 0:  # 엔진이 켜져 있고 속도가 0일 때만 시동을 끌 수 있도록
-            car_controller.toggle_engine()  # 엔진 끄기
-            print("엔진이 꺼졌습니다.")
-        else:
-            print("엔진이 이미 켜져 있습니다.")
+        elif car_controller.car.engine_on == True:  # 엔진이 켜져 있을 경우
+            if car_controller.get_speed() == 0 and car_controller.gear() == "P":  # 속도가 0이고 기어가 P일 때만
+                car_controller.toggle_engine()  # 엔진 끄기
+            else:
+                print("엔진을 끄려면 속도가 0이고 기어가 P여야 합니다.")
 
     elif command == "ACCELERATE":
         if car_controller.car.engine_on == True: # 엔진이 켜져있을때만 엑셀 작동
-            if car_controller.get_speed() < 130:  # 시속 130km 이상으로 증가하지 않도록 제한
-                car_controller.accelerate()  # 속도 +10
-                print(f"가속 페달 상태: ON, 현재 속도: {car_controller.get_speed()} km/h")
-                
-                # 속도가 30km/h에 도달하면 모든 문을 잠금
-                if car_controller.get_speed() >= 30 and not car_controller.get_lock_status():
-                    car_controller.lock_left_door() # 왼쪽문 잠금
-                    car_controller.lock_right_door() # 오른쪽문 잠금
-                    print("모든 문이 잠겼습니다.")
+            if car_controller.gear() in ["R", "D"]: # 기어가 R이나 D일때만 작동
+                if car_controller.get_speed() < 130:  # 시속 130km 이상으로 증가하지 않도록 제한
+                    car_controller.accelerate()  # 속도 +10
+                    print(f"가속 페달 상태: ON, 현재 속도: {car_controller.get_speed()} km/h")
+
+                    # 속도가 30km/h에 도달하면 모든 문을 잠금
+                    if car_controller.get_speed() >= 30 and not car_controller.get_lock_status():
+                        car_controller.lock_left_door() # 왼쪽문 잠금
+                        car_controller.lock_right_door() # 오른쪽문 잠금
+                        print("모든 문이 잠겼습니다.")
+                else:
+                    print("최대 속도에 도달하여 더 이상 가속할 수 없습니다.")
             else:
-                print("최대 속도에 도달하여 더 이상 가속할 수 없습니다.")
+                print("기어가 R이나 D일때만 가속 페달이 작동합니다.")
+        else:
+            print("엔진이 켜져있을때만 가속 페달이 작동합니다.")
 
     elif command == "BRAKE":
         # 브레이크 페달을 밟았을 때의 동작
@@ -77,8 +82,8 @@ def execute_command_callback(command, car_controller):
     elif command == "RIGHT_DOOR_CLOSE":
         car_controller.close_right_door() # 오른쪽문 닫기
     elif command == "TRUNK_OPEN":
-        if car_controller.gear()!="P":
-            print("트렁크를 열려면 기어를'P'에 두십시오")
+        if car_controller.gear() != "P" or car_controller.get_speed() != 0:
+            print("트렁크를 열려면 기어를 'P'에 두고 차량의 속도가 0이어야 합니다.")
         elif car_controller.get_lock_status() == True: #false가 unlocked이다.
             print("트렁크를 열 수 없습니다.")
         else:
