@@ -5,28 +5,28 @@ from main import execute_command_callback
 
 def testGear(command,car_controller):
     if command == "GEAR_P":
-        if car_controller.get_speed() != 0:
+        if car_controller.get_speed() != 0 or car_controller.get_engine_status() == False :
             return car_controller.gear()
         
         car_controller.gear_p()
         return car_controller.gear()
 
     elif command =="GEAR_N":
-        if car_controller.get_speed() != 0:
+        if car_controller.get_speed() != 0 or car_controller.get_engine_status() == False:
             return car_controller.gear()
         
         car_controller.gear_n()
         return car_controller.gear()
     
     elif command =="GEAR_R":
-        if car_controller.get_speed() != 0:
+        if car_controller.get_speed() != 0 or car_controller.get_engine_status() == False:
             return car_controller.gear()
         
         car_controller.gear_r()
         return car_controller.gear()
 
     else:
-        if car_controller.get_speed() != 0:
+        if car_controller.get_speed() != 0 or car_controller.get_engine_status() == False:
             return car_controller.gear()
         
         car_controller.gear_d()
@@ -92,13 +92,13 @@ class TestSOS(unittest.TestCase):
         self.assertEqual(testGear("GEAR_P",car_controller), "P")
 
         execute_command_callback("GEAR_R", car_controller)
-        self.assertEqual(testGear("GEAR_R",car_controller), "R")
+        self.assertEqual(testGear("GEAR_R",car_controller), "P")
 
         execute_command_callback("GEAR_D", car_controller)
-        self.assertEqual(testGear("GEAR_D",car_controller), "D")
+        self.assertEqual(testGear("GEAR_D",car_controller), "P")
 
         execute_command_callback("GEAR_N", car_controller)
-        self.assertEqual(testGear("GEAR_N",car_controller), "N")
+        self.assertEqual(testGear("GEAR_N",car_controller), "P")
 
 
     def test_gear_driving(self):
