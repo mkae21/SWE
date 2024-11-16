@@ -23,17 +23,22 @@ def execute_command_callback(command, car_controller):
 
     elif command == "ACCELERATE":
         if car_controller.car.engine_on == True: # 엔진이 켜져있을때만 엑셀 작동
-            if car_controller.get_speed() < 130:  # 시속 130km 이상으로 증가하지 않도록 제한
-                car_controller.accelerate()  # 속도 +10
-                print(f"가속 페달 상태: ON, 현재 속도: {car_controller.get_speed()} km/h")
-                
-                # 속도가 30km/h에 도달하면 모든 문을 잠금
-                if car_controller.get_speed() >= 30 and not car_controller.get_lock_status():
-                    car_controller.lock_left_door() # 왼쪽문 잠금
-                    car_controller.lock_right_door() # 오른쪽문 잠금
-                    print("모든 문이 잠겼습니다.")
+            if car_controller.gear() in ["R", "D"]: # 기어가 R이나 D일때만 작동
+                if car_controller.get_speed() < 130:  # 시속 130km 이상으로 증가하지 않도록 제한
+                    car_controller.accelerate()  # 속도 +10
+                    print(f"가속 페달 상태: ON, 현재 속도: {car_controller.get_speed()} km/h")
+
+                    # 속도가 30km/h에 도달하면 모든 문을 잠금
+                    if car_controller.get_speed() >= 30 and not car_controller.get_lock_status():
+                        car_controller.lock_left_door() # 왼쪽문 잠금
+                        car_controller.lock_right_door() # 오른쪽문 잠금
+                        print("모든 문이 잠겼습니다.")
+                else:
+                    print("최대 속도에 도달하여 더 이상 가속할 수 없습니다.")
             else:
-                print("최대 속도에 도달하여 더 이상 가속할 수 없습니다.")
+                print("기어가 R이나 D일때만 가속 페달이 작동합니다.")
+        else:
+            print("엔진이 켜져있을때만 가속 페달이 작동합니다.")
 
     elif command == "BRAKE":
         # 브레이크 페달을 밟았을 때의 동작
