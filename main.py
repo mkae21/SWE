@@ -114,13 +114,17 @@ def execute_command_callback(command, car_controller):
         if car_controller.get_speed() == 0 and car_controller.get_engine_status():
             car_controller.gear_p()  # 주차 기어로 전환
             print("기어가 P(주차)로 변경되었습니다.")
+        elif car_controller.get_speed() == 0 and car_controller.get_engine_status()==False:
+            print("엔진이 꺼져있습니다. 엔진을 켜주세요.")
         else:
-            print("속도가 0이 아닙니다. 기어를 P로 변경하려면 속도를 0으로 줄이세요.")
+            print("속도가 0이 아닙니다. 기어를 P로 변경하려면 속도를 0으로 줄이세요. ")
 
     elif command == "GEAR_R":
         if car_controller.get_speed() == 0 and car_controller.get_engine_status():
             car_controller.gear_r()  # 후진 기어로 전환
             print("기어가 R(후진)로 변경되었습니다.")
+        elif car_controller.get_speed() == 0 and car_controller.get_engine_status()==False:
+            print("엔진이 꺼져있습니다. 엔진을 켜주세요.")
         else:
             print("속도가 0이 아닙니다. 기어를 R로 변경하려면 속도를 0으로 줄이세요.")
 
@@ -128,12 +132,19 @@ def execute_command_callback(command, car_controller):
         if car_controller.get_speed() == 0 and car_controller.get_engine_status():
             car_controller.gear_d()  # 주행 기어로 전환
             print("기어가 D(주행)로 변경되었습니다.")
+        elif car_controller.get_speed() == 0 and car_controller.get_engine_status()==False:
+            print("엔진이 꺼져있습니다. 엔진을 켜주세요.")
         else:
             print("속도가 0이 아닙니다. 기어를 D로 변경하려면 속도를 0으로 줄이세요.")
 
     elif command == "GEAR_N" and car_controller.get_engine_status():
-        car_controller.gear_n()  # 중립 기어로 전환
-        print("기어가 N(중립)으로 변경되었습니다.")
+        if car_controller.get_speed() == 0 and car_controller.get_engine_status():
+            car_controller.gear_n() # 중립 기어로 전환
+            print("기어가 N(중립)으로 변경되었습니다.")
+        elif car_controller.get_speed() == 0 and car_controller.get_engine_status()==False:
+            print("엔진이 꺼져있습니다. 엔진을 켜주세요.")
+        else:
+            print("속도가 0이 아닙니다. 기어를 N으로 변경하려면 속도를 0으로 줄이세요.")
 
 
 # 파일 경로를 입력받는 함수
