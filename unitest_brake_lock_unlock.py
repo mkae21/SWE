@@ -35,28 +35,18 @@ class TestBrakeAndLock(unittest.TestCase):
         expected_speed = max(0, initial_speed - 10)
         self.assertEqual(self.car_controller.get_speed(), expected_speed, f"브레이크 후 속도는 {expected_speed}이어야 합니다.")
 
-    def test_lock_vehicle(self):
-        # 차량 초기 상태 확인 -> 잠금 상태여야함
-        self.assertTrue(self.car.lock, "True, 잠금 상태여야함.")
-        # 잠금 해제
-        self.car.unlock_vehicle()
-        self.assertFalse(self.car.lock, "False인지 확인")
-        # 다시 잠금
+    def test_lock_unlock_vehicle_system(self):
+        # 초기 상태: 차량 전체가 잠겨 있어야 함
         self.car_controller.lock_vehicle()
-        self.assertTrue(self.car.lock, "True인지 확인")
-
-    def test_unlock_vehicle_system(self):
-        # 초기 상태: 차량 및 전체 시스템이 잠겨 있어야 함
-        self.car_controller.lock_vehicle()
-        self.assertTrue(self.car_controller.get_lock_status(), "True, 차량 및 시스템이 잠겨 있어야 합니다.")
+        self.assertTrue(self.car_controller.get_lock_status(), "True, 차량 잠금 상태여야합니다.")
 
         # 차량 잠금 해제 명령 실행
         self.car_controller.unlock_vehicle()
-        self.assertFalse(self.car_controller.get_lock_status(), "False, 차량 및 시스템 잠금 해제 상태여야 합니다.")
+        self.assertFalse(self.car_controller.get_lock_status(), "False, 차량 잠금 해제 상태여야 합니다.")
 
         # 다시 잠금 확인
         self.car_controller.lock_vehicle()
-        self.assertTrue(self.car_controller.get_lock_status(), "True, 차량 및 시스템이 다시 잠겨 있어야 합니다.")
+        self.assertTrue(self.car_controller.get_lock_status(), "True, 차량 잠금 상태여야합니다.")
 
 
 if __name__ == "__main__":
