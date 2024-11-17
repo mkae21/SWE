@@ -67,23 +67,19 @@ class Car:
 
     # 기어 P 변경
     def gear_p(self):
-        if self.__speed == 0 :
-            self._gear = "P"
+        self._gear = "P"
 
     # 기어 R 변경
     def gear_r(self):
-        if self.__speed == 0 :
-            self._gear = "R"
+        self._gear = "R"
 
     # 기어 N 변경
     def gear_n(self):
-        if self.__speed == 0:
-            self._gear = "N"
+        self._gear = "N"
         
     # 기어 D 변경
     def gear_d(self):
-        if self.__speed == 0:
-            self._gear = "D"
+        self._gear = "D"
     
     # 가속
     def accelerate(self):
