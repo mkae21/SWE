@@ -3,6 +3,7 @@ from car import Car
 from car_controller import CarController
 from main import execute_command_callback
 
+
 class TestBrakeAndLock(unittest.TestCase):
     def setUp(self):
         self.car = Car()
@@ -12,16 +13,32 @@ class TestBrakeAndLock(unittest.TestCase):
         execute_command_callback("BRAKE", self.car_controller)
         self.assertEqual(self.car_controller.get_speed(), 0, "속도가 0이면 브레이크를 밟아도 0이여야 함.")
 
+
     def test_brake_does_not_reduce_below_zero(self):
-        execute_command_callback("BRAKE", self.car_controller)
+        execute_command_callback("ENGINE_BTN", self.car_controller)
+        for _ in range(5):  # 여러 번 브레이크 실행
+            execute_command_callback("BRAKE", self.car_controller)
         self.assertGreaterEqual(self.car_controller.get_speed(), 0, "속도는 아무리 브레이크를 밟아도 0이하로 감소되면 안됨.")
 
-    def test_accelerate_then_brake(self):
-        execute_command_callback("ENGINE_BTN", self.car_controller)  # 엔진을 켬
-        for _ in range(3):
-            execute_command_callback("ACCELERATE", self.car_controller)  # 세 번 가속 (속도 30 km/h 예상)
 
+    def test_accelerate_then_brake(self):
+    # 엔진을 켬
+        execute_command_callback("ENGINE_BTN", self.car_controller)
+        self.assertTrue(self.car_controller.get_engine_status(), "엔진이 켜져 있어야 합니다.")
+
+    # 기어를 'D'로 설정
+        execute_command_callback("GEAR_D", self.car_controller)
+        self.assertEqual(self.car_controller.gear(), "D", "기어가 D로 설정되어야 합니다.")
+
+    # 가속
+        for _ in range(3):
+            execute_command_callback("ACCELERATE", self.car_controller)
+
+    # 속도 확인
         initial_speed = self.car_controller.get_speed()
+        self.assertGreater(initial_speed, 0, "가속 후 속도는 0보다 커야 합니다.")
+
+    # 브레이크
         execute_command_callback("BRAKE", self.car_controller)
         self.assertLess(self.car_controller.get_speed(), initial_speed, "가속 후에 브레이크를 밟으면 속도가 감소해야 함.")
 
@@ -51,4 +68,3 @@ class TestBrakeAndLock(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
