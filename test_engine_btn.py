@@ -26,10 +26,15 @@ class TestEngineButton(unittest.TestCase):
         self.car_controller.toggle_engine()
         self.car_controller.gear_d()
         execute_command_callback("ENGINE_BTN", self.car_controller)
+        self.assertEqual(self.car_controller.get_engine_status(), True)
+
         self.car_controller.gear_r()
         execute_command_callback("ENGINE_BTN", self.car_controller)
+        self.assertEqual(self.car_controller.get_engine_status(), True)
+
         self.car_controller.gear_n()
         execute_command_callback("ENGINE_BTN", self.car_controller)
+        self.assertEqual(self.car_controller.get_engine_status(), True)
 
     def test_engine_off_speed_not_zero(self):
         # 상태 설정: 속도가 0이 아님, 엔진을 켬
