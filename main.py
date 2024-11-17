@@ -19,6 +19,7 @@ def execute_command_callback(command, car_controller):
         elif car_controller.car.engine_on == True:  # 엔진이 켜져 있을 경우
             if car_controller.get_speed() == 0 and car_controller.gear() == "P":  # 속도가 0이고 기어가 P일 때만
                 car_controller.toggle_engine()  # 엔진 끄기
+                print("엔진이 꺼졌습니다.")
             else:
                 print("엔진을 끄려면 속도가 0이고 기어가 P여야 합니다.")
 
