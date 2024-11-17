@@ -22,6 +22,20 @@ class TestEngineButton(unittest.TestCase):
         # 엔진이 꺼졌는지 확인
         self.assertEqual(self.car_controller.get_engine_status(), False)
 
+    def test_engine_off_gear_not_P(self):
+        self.car_controller.toggle_engine()
+        self.car_controller.gear_d()
+        execute_command_callback("ENGINE_BTN", self.car_controller)
+        self.assertEqual(self.car_controller.get_engine_status(), True)
+
+        self.car_controller.gear_r()
+        execute_command_callback("ENGINE_BTN", self.car_controller)
+        self.assertEqual(self.car_controller.get_engine_status(), True)
+
+        self.car_controller.gear_n()
+        execute_command_callback("ENGINE_BTN", self.car_controller)
+        self.assertEqual(self.car_controller.get_engine_status(), True)
+
     def test_engine_off_speed_not_zero(self):
         # 상태 설정: 속도가 0이 아님, 엔진을 켬
         self.car_controller.toggle_engine()  # 엔진을 무조건 켬 (초기 상태에서 켜진 상태로)
