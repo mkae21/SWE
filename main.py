@@ -13,6 +13,7 @@ def execute_command_callback(command, car_controller):
             if car_controller.get_speed() == 0:
                 if car_controller.gear() == "P": # 속도가 0이면 브레이크가 눌린 상태로 간주, 기어는 p상태
                     car_controller.toggle_engine()  # 엔진 켜기
+                    print("엔진이 켜졌습니다.")
             else:
                 print("브레이크 페달을 밟아야합니다.")  # 속도가 0이 아니면 경고 메시지 출력
         elif car_controller.car.engine_on == True:  # 엔진이 켜져 있을 경우
