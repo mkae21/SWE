@@ -7,8 +7,25 @@ from gui import CarSimulatorGUI
 # execute_command를 제어하는 콜백 함수
 # -> 이 함수에서 시그널을 입력받고 처리하는 로직을 구성하면, 알아서 GUI에 연동이 됩니다.
 
-def execute_command_callback(command, car_controller):
+def process_command(input_command):
+    # 공백으로 입력된 명령어 분리
+    commands = input_command.split(" ")
+
+    # 명령어 개수에 따라 처리
+    if len(commands) == 2:
+        command1, command2 = commands[0], commands[1]
+    elif len(commands) == 1:
+        command1, command2 = commands[0], None
+    else:
+        command1, command2 = None, None  # 잘못된 입력 처리
+
+    return command1, command2
+
+def execute_command_callback(input_command, car_controller):
+    command, command2 = process_command(input_command)
     if command == "ENGINE_BTN":
+        print("브레이크를 밟고 엔진버튼을 활성화하세요.")
+    elif command == "BRAKE" and command2 == "ENGINE_BTN":
         if car_controller.car.engine_on == False:  # 엔진이 꺼져 있을때
             if car_controller.get_speed() == 0:
                 if car_controller.gear() == "P": # 속도가 0이면 브레이크가 눌린 상태로 간주, 기어는 p상태
@@ -22,7 +39,6 @@ def execute_command_callback(command, car_controller):
                 print("엔진이 꺼졌습니다.")
             else:
                 print("엔진을 끄려면 속도가 0이고 기어가 P여야 합니다.")
-
     elif command == "ACCELERATE":
         if car_controller.car.engine_on == True: # 엔진이 켜져있을때만 엑셀 작동
             if car_controller.gear() in ["R", "D"]: # 기어가 R이나 D일때만 작동
@@ -47,8 +63,10 @@ def execute_command_callback(command, car_controller):
         if car_controller.get_speed() > 0:  # 시속 0km 이하로 감소하지 않도록 제한
             car_controller.brake()  # 속도 -20
             print(f"브레이크 페달 상태: ON, 현재 속도: {car_controller.get_speed()} km/h")
+
         else:
             print("속도가 0km/h이므로 더 이상 감속할 수 없습니다.")
+
     elif command == "LOCK":
         if car_controller.get_lock_status == False: # 차량 전체 잠금이 False일 때
             car_controller.lock_vehicle() # 차량잠금
